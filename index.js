@@ -15,6 +15,7 @@ app.get('/', (req, res) => {
 
     axios.get(URL)
         .then(response => {
+            movies = []
             const html = response.data
             const $ = cheerio.load(html)
           
