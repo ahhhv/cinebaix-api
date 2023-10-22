@@ -7,38 +7,36 @@ const cheerio = require('cheerio')
 
 const app = express()
 
-const movies = []
-
 app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
 
 app.get('/', (req, res) => {
-
     axios.get(URL)
         .then(response => {
-            movies = []
+            const movies = []
             const html = response.data
             const $ = cheerio.load(html)
           
-            $('#formu_copias a div').each( function () {
+            $('#formu_copias a .caja_copia2022').each( function () {
                 const schedule = []
 
                 const img = $(this).find('img').attr('src')
-                const baseWithImage = URL + img
-                const title = $(this).find('.caja_datos_copia .copia_titulo').attr('value')
+                const imgUrl = URL + img
+                const title = $(this).find('.caja_datos_copia .copia_titulo').text().trim()
                 const duration = $(this).find('.caja_datos_copia .copia_duracion').attr('value')
-                const classification = $(this).find('.caja_datos_copia .copia_clasificine').attr('value')                
+                const classification = $(this).find('.caja_datos_copia .copia_clasificine').text().trim()
+                const rating = $(this).find('.caja_datos_copia .copia_cclasifi').attr('value')
 
-                $(this).find(".caja_horarios_dia ").each( function () {
+                $(this).find(".caja_horarios_dia").each( function () {
                     const timetable = []
 
                     const day = $(this).find('.caja_dia .cdia_sesion').attr('value')
-                    $(this).find('.sala_sesion').each(function (i, elm) {
+                    $(this).find('.sala_sesion').each(function (i) {
                         timetable[i] = {
                             room: $(this).attr('value'),
                             time: ''
                         }
                     })
-                    $(this).find('.boton_hora').each(function (i, elm) {
+                    $(this).find('.boton_hora').each(function (i) {
                         timetable[i].time = $(this).attr('value')
                     })
 
@@ -48,12 +46,13 @@ app.get('/', (req, res) => {
                     })
                 })
 
-                if (img != undefined) {
+                if (img !== undefined) {
                     movies.push({
                         title: title,
                         duration: duration.replace('Durada: ', '').replace(' min.', ''),
                         classification: classification.split('-')[0],
-                        img: baseWithImage,
+                        rating: rating.replace('Qualificació: ', '').replace('Anys', ''). trim(),
+                        img: imgUrl,
                         schedule: schedule
                     })
                 }
@@ -61,5 +60,4 @@ app.get('/', (req, res) => {
 
             res.json(movies)
         })
-
 })
