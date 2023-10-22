@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "author": "Alex Hernández",
+  "contributors": ["Rubén Albarracín"],
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
