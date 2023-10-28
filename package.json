@@ -1,17 +1,17 @@
 {
   "name": "cinebaix-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "vercel dev"
   },
   "author": "Alex Hernández",
-  "contributors": ["Rubén Albarracín"],
+  "contributors": [
+    "Rubén Albarracín"
+  ],
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
-    "cheerio": "^1.0.0-rc.10",
-    "express": "^4.17.1"
+    "cheerio": "^1.0.0-rc.10"
   }
 }
