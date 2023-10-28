@@ -10,8 +10,6 @@ export default async function handler(request, response) {
     const $ = cheerio.load(html)
 
     $('#formu_copias a .caja_copia2022').each(function () {
-        const schedule = []
-
         const img = $(this).find('img').attr('src')
         const imgUrl = URL + img
         const title = $(this).find('.caja_datos_copia .copia_titulo').text().trim()
@@ -19,6 +17,7 @@ export default async function handler(request, response) {
         const classification = $(this).find('.caja_datos_copia .copia_clasificine').text().trim()
         const rating = $(this).find('.caja_datos_copia .copia_cclasifi').attr('value')
 
+        const schedule = []
         $(this).find(".caja_horarios_dia").each(function () {
             const timetable = []
 
@@ -33,10 +32,21 @@ export default async function handler(request, response) {
                 timetable[i].time = $(this).attr('value')
             })
 
-            schedule.push({
-                day: day,
-                rooms: timetable
-            })
+            if (day) {
+                schedule.push({
+                    day: day,
+                    rooms: timetable
+                })
+            } else {
+                const schIndex = schedule.length - 1
+                schedule[schIndex] = {
+                    ...schedule[schIndex],
+                    rooms: [
+                        ...schedule[schIndex].rooms,
+                        ...timetable
+                    ]
+                }
+            }
         })
 
         if (img !== undefined) {
